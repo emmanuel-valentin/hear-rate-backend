@@ -1,22 +1,10 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Post,
-  Request,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+
 import { AuthService } from './auth.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { LoginUserDto } from './dto/login-user.dto';
+import { AuthenticatedUserDto, CreateUserDto, LoginUserDto } from './dto';
+import { User } from './decorators';
 import { AuthGuard } from './auth.guard';
-import {
-  ApiBearerAuth,
-  ApiOkResponse,
-  ApiOperation,
-  ApiTags,
-} from '@nestjs/swagger';
-import { AuthenticatedUserDto } from './dto/authenticated-user.dto';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -43,11 +31,14 @@ export class AuthController {
     return this.authService.login(loginUserDto);
   }
 
+  @Get('check-status')
   @UseGuards(AuthGuard)
-  @ApiBearerAuth('access-token')
-  @ApiOperation({ summary: 'Ruta protegida de prueba' })
-  @Get('protected')
-  getProfile(@Request() req) {
-    return req.user;
+  @ApiOperation({ summary: 'Verifica si un token es válido' })
+  @ApiOkResponse({
+    description: 'Token válido',
+    type: AuthenticatedUserDto,
+  })
+  checkStatus(@User('userId') userId: number, @User('email') email: string) {
+    return this.authService.checkStatus(userId, email);
   }
 }

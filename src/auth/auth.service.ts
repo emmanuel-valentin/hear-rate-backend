@@ -3,12 +3,11 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
-import { CreateUserDto } from './dto/create-user.dto';
 import { JwtService } from '@nestjs/jwt';
-import { LoginUserDto } from './dto/login-user.dto';
 import * as bcrypt from 'bcrypt';
-import { AuthenticatedUserDto } from './dto/authenticated-user.dto';
+
+import { PrismaService } from 'src/prisma/prisma.service';
+import { AuthenticatedUserDto, CreateUserDto, LoginUserDto } from './dto';
 
 @Injectable()
 export class AuthService {
@@ -40,9 +39,7 @@ export class AuthService {
     delete user.password;
 
     return {
-      firstName: user.firstName,
-      lastName: user.lastName,
-      email: user.email,
+      ...user,
       token: await this.jwtService.signAsync(user),
     };
   }
@@ -64,9 +61,20 @@ export class AuthService {
     delete user.password;
 
     return {
-      firstName: user.firstName,
-      lastName: user.lastName,
-      email: user.email,
+      ...user,
+      token: await this.jwtService.signAsync(user),
+    };
+  }
+
+  async checkStatus(userId: number, email: string) {
+    const user = await this.prismaService.user.findFirst({
+      where: { userId, email },
+    });
+
+    delete user.password;
+
+    return {
+      ...user,
       token: await this.jwtService.signAsync(user),
     };
   }
