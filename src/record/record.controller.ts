@@ -10,10 +10,11 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common';
+
 import { RecordService } from './record.service';
-import { CreateRecordDto } from './dto/create-record.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { User } from 'src/auth/decorators';
+import { CreateRecordDto } from './dto';
 
 @UseGuards(AuthGuard)
 @Controller('records')
