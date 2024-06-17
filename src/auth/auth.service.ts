@@ -36,16 +36,14 @@ export class AuthService {
         password: hashedPassword,
       },
     });
-    const payload = {
-      sub: user.userId,
-      email: user.email,
-    };
+
+    delete user.password;
 
     return {
       firstName: user.firstName,
       lastName: user.lastName,
       email: user.email,
-      token: await this.jwtService.signAsync(payload),
+      token: await this.jwtService.signAsync(user),
     };
   }
 
@@ -63,16 +61,13 @@ export class AuthService {
       throw new UnauthorizedException('Correo o contraseña incorrectos');
     }
 
-    const payload = {
-      sub: user.userId,
-      email: user.email,
-    };
+    delete user.password;
 
     return {
       firstName: user.firstName,
       lastName: user.lastName,
       email: user.email,
-      token: await this.jwtService.signAsync(payload),
+      token: await this.jwtService.signAsync(user),
     };
   }
 }
