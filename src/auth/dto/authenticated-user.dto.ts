@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsString, MaxLength, MinLength } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsString, MinLength } from 'class-validator';
 
-export class CreateUserDto {
+export class AuthenticatedUserDto {
   // Validation
   @IsString()
   @MinLength(1)
@@ -26,14 +26,12 @@ export class CreateUserDto {
   })
   email: string;
 
-  // Validation
   @IsString()
-  @MinLength(8)
-  @MaxLength(40)
+  @IsNotEmpty()
   // Swagger
   @ApiProperty({
-    example: 'superSecretPassword123',
-    description: 'Contraseña del usuario',
+    example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6Ik...',
+    description: 'Token de autenticación del usuario',
   })
-  password: string;
+  token: string;
 }
