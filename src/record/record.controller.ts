@@ -34,10 +34,10 @@ export class RecordController {
   @Get()
   async findAll(
     @User('userId') userId: number,
-    @Query('page', ParseIntPipe) page: number,
-    @Query('limit', ParseIntPipe) limit: number,
+    @Query('page') page: string = '1',
+    @Query('limit') limit: string = '10',
   ) {
-    return this.recordService.findAll(userId, page, limit);
+    return this.recordService.findAll(userId, +page, +limit);
   }
 
   @Get(':recordId')
