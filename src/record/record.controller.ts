@@ -8,6 +8,7 @@ import {
   ParseIntPipe,
   Post,
   Put,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 
@@ -31,8 +32,12 @@ export class RecordController {
   }
 
   @Get()
-  async findAll(@User('userId') userId: number) {
-    return this.recordService.findAll(userId);
+  async findAll(
+    @User('userId') userId: number,
+    @Query('page', ParseIntPipe) page: number,
+    @Query('limit', ParseIntPipe) limit: number,
+  ) {
+    return this.recordService.findAll(userId, page, limit);
   }
 
   @Get(':recordId')

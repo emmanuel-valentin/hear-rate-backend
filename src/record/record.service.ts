@@ -17,9 +17,11 @@ export class RecordService {
     });
   }
 
-  async findAll(userId: number) {
+  async findAll(userId: number, page: number = 1, limit: number = 10) {
     return this.prismaService.heartRateRecord.findMany({
       where: { userId },
+      take: limit,
+      skip: (page - 1) * limit,
     });
   }
 
