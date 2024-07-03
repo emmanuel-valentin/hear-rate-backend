@@ -8,15 +8,20 @@ import {
   ParseIntPipe,
   Post,
   Put,
-  Query,
 } from '@nestjs/common';
 
 import { RecordService } from './record.service';
 import { CreateRecordDto } from './dto';
+import { RecordTaskService } from './record-task.service';
+import { RecordGateway } from './record.gateway';
+import { measurement } from './var/lastRecord';
 
 @Controller('records')
 export class RecordController {
-  constructor(private readonly recordService: RecordService) {}
+  constructor(
+    private readonly recordService: RecordService,
+    private eventsGateway: RecordGateway
+  ) {}
 
   @Post()
   @HttpCode(201)
@@ -25,11 +30,14 @@ export class RecordController {
   }
 
   @Get()
-  async findAll(
-    @Query('page') page: string = '1',
-    @Query('limit') limit: string = '10',
-  ) {
-    return this.recordService.findAll(+page, +limit);
+  async findAll() {
+    return this.recordService.findAll();
+  }
+
+  @Get('measurement')
+  async measurement(@Body() createRecordDto: CreateRecordDto) {
+    measurement.record = createRecordDto;
+    return this.eventsGateway.emit('measurement', createRecordDto);
   }
 
   @Get(':recordId')

@@ -6,6 +6,6 @@ export class CreateRecordDto {
   @Min(0) // TODO: Si es que existe un mínimo
   bpmAvg: number;
 
-  @IsInt()
+  @IsNumber()
   delta: number;
 }
