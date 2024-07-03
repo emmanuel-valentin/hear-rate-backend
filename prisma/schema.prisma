@@ -18,5 +18,5 @@ model HeartRateRecord {
   recordId   Int      @id @default(autoincrement())
   recordedAt DateTime @default(now())
   bpmAvg     Float
-  delta      Int
+  delta      Float
 }
